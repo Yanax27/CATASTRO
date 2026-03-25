@@ -15,13 +15,14 @@ const searchPredios = async (req, res, next) => {
   }
 };
 
-const getPredioByReferenciaCatastral = async (req, res, next) => {
+const getPredioByReferenciaCatastralAntigua = async (req, res, next) => {
   try {
     const { referenciaCatastral } = req.params;
 
-    const data = await predioService.getPredioByReferenciaCatastral(
-      referenciaCatastral
-    );
+    const data =
+      await predioService.getPredioByReferenciaCatastralAntigua(
+        referenciaCatastral
+      );
 
     if (!data) {
       return res.status(404).json({
@@ -42,5 +43,5 @@ const getPredioByReferenciaCatastral = async (req, res, next) => {
 
 module.exports = {
   searchPredios,
-  getPredioByReferenciaCatastral,
+  getPredioByReferenciaCatastralAntigua,
 };
