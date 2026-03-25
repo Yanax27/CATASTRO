@@ -8,7 +8,7 @@ router.get("/buscar", validatePredioSearch, predioController.searchPredios);
 
 router.get(
   "/detalle/:referenciaCatastral",
-  predioController.getPredioByReferenciaCatastral
+  predioController.getPredioByReferenciaCatastralAntigua
 );
 
 module.exports = router;

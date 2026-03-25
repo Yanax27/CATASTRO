@@ -1,14 +1,22 @@
 const predioDAO = require("../dao/predio.dao");
+const {
+  mapPredioDomains,
+  mapPrediosDomains,
+} = require("../utils/mapPredioDomains");
 
 const searchPredios = async (filters) => {
-  return await predioDAO.searchPredios(filters);
+  const predios = await predioDAO.searchPredios(filters);
+  return mapPrediosDomains(predios);
 };
 
-const getPredioByReferenciaCatastral = async (referenciaCatastral) => {
-  return await predioDAO.getPredioByReferenciaCatastral(referenciaCatastral);
+const getPredioByReferenciaCatastralAntigua = async (referenciaCatastral) => {
+  const predio =
+    await predioDAO.getPredioByReferenciaCatastralAntigua(referenciaCatastral);
+
+  return mapPredioDomains(predio);
 };
 
 module.exports = {
   searchPredios,
-  getPredioByReferenciaCatastral,
+  getPredioByReferenciaCatastralAntigua,
 };
