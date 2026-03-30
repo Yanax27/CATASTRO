@@ -41,7 +41,51 @@ const getPredioByReferenciaCatastralAntigua = async (req, res, next) => {
   }
 };
 
+const updateUbicCarpeta = async (req, res, next) => {
+  try {
+    const { referenciaCatastral } = req.params;
+    const { ubic_carpeta } = req.body;
+
+    const data =
+      await predioService.updateUbicCarpetaByReferenciaCatastralAntigua(
+        referenciaCatastral,
+        ubic_carpeta
+      );
+
+    if (!data) {
+      return res.status(404).json({
+        ok: false,
+        message: "No se encontró el predio para actualizar",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Ubicación de carpeta actualizada correctamente",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getDashboardResumen = async (req, res, next) => {
+  try {
+    const data = await predioService.getDashboardResumen();
+
+    res.status(200).json({
+      ok: true,
+      message: "Resumen del dashboard obtenido correctamente",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   searchPredios,
   getPredioByReferenciaCatastralAntigua,
+  updateUbicCarpeta,
+  getDashboardResumen,
 };

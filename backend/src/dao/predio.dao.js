@@ -42,7 +42,9 @@ const searchPredios = async (filters) => {
       n_inmueble,
       descripcion,
       observaciones,
-      fecha_levantamiento
+      fecha_levantamiento,
+      ubic_carpeta,
+      fecha_rec_carpeta
     FROM dbo.PREDIO
     WHERE 1 = 1
   `;
@@ -138,6 +140,8 @@ const getPredioByReferenciaCatastralAntigua = async (referenciaCatastral) => {
       registro_DDRR,
       ruat,
       n_inmueble,
+      ubic_carpeta,
+      fecha_rec_carpeta,
       SHAPE.STAsText() AS shape_wkt,
       SHAPE.STSrid AS shape_srid
     FROM dbo.PREDIO
@@ -169,7 +173,77 @@ const getPredioByReferenciaCatastralAntigua = async (referenciaCatastral) => {
   };
 };
 
+const updateUbicCarpetaByReferenciaCatastralAntigua = async (
+  referenciaCatastral,
+  ubicCarpeta
+) => {
+  const pool = await getPool();
+  const request = pool.request();
+
+  request.input("referencia_catastral", sql.NVarChar(23), referenciaCatastral);
+  request.input("ubic_carpeta", sql.NVarChar(100), ubicCarpeta.trim());
+
+  const query = `
+    UPDATE dbo.PREDIO
+    SET
+      ubic_carpeta = @ubic_carpeta,
+      fecha_rec_carpeta = SYSDATETIME()
+    OUTPUT
+      INSERTED.OBJECTID,
+      INSERTED.referencia_catastral_antigua,
+      INSERTED.ubic_carpeta,
+      INSERTED.fecha_rec_carpeta
+    WHERE referencia_catastral_antigua = @referencia_catastral
+  `;
+
+  const result = await request.query(query);
+  return result.recordset[0] || null;
+};
+
+const getDashboardResumen = async () => {
+  const pool = await getPool();
+  const request = pool.request();
+
+  const query = `
+    SELECT
+      COUNT(*) AS totalPredios,
+      SUM(CASE WHEN ubic_carpeta IS NULL OR LTRIM(RTRIM(ubic_carpeta)) = '' THEN 1 ELSE 0 END) AS sinUbicacion,
+      SUM(CASE WHEN CAST(fecha_rec_carpeta AS DATE) = CAST(GETDATE() AS DATE) THEN 1 ELSE 0 END) AS actualizadosHoy,
+      SUM(CASE WHEN fecha_rec_carpeta >= DATEADD(DAY, -7, GETDATE()) THEN 1 ELSE 0 END) AS actualizadosUltimos7Dias,
+
+      SUM(CASE WHEN ubic_carpeta = 'Ventanilla' THEN 1 ELSE 0 END) AS Ventanilla,
+      SUM(CASE WHEN ubic_carpeta = 'Geomatica' THEN 1 ELSE 0 END) AS Geomatica,
+      SUM(CASE WHEN ubic_carpeta = 'Unidad Campo' THEN 1 ELSE 0 END) AS [Unidad Campo],
+      SUM(CASE WHEN ubic_carpeta = 'Secretaria' THEN 1 ELSE 0 END) AS Secretaria,
+      SUM(CASE WHEN ubic_carpeta = 'Asesoria Legal' THEN 1 ELSE 0 END) AS [Asesoria Legal],
+      SUM(CASE WHEN ubic_carpeta = 'Archivos' THEN 1 ELSE 0 END) AS Archivos,
+      SUM(CASE WHEN ubic_carpeta = 'Otros' THEN 1 ELSE 0 END) AS Otros
+    FROM dbo.PREDIO
+  `;
+
+  const result = await request.query(query);
+  const row = result.recordset[0] || {};
+
+  return {
+    totalPredios: Number(row.totalPredios || 0),
+    sinUbicacion: Number(row.sinUbicacion || 0),
+    actualizadosHoy: Number(row.actualizadosHoy || 0),
+    actualizadosUltimos7Dias: Number(row.actualizadosUltimos7Dias || 0),
+    ubicaciones: {
+      Ventanilla: Number(row.Ventanilla || 0),
+      Geomatica: Number(row.Geomatica || 0),
+      "Unidad Campo": Number(row["Unidad Campo"] || 0),
+      Secretaria: Number(row.Secretaria || 0),
+      "Asesoria Legal": Number(row["Asesoria Legal"] || 0),
+      Archivos: Number(row.Archivos || 0),
+      Otros: Number(row.Otros || 0),
+    },
+  };
+};
+
 module.exports = {
   searchPredios,
   getPredioByReferenciaCatastralAntigua,
+  updateUbicCarpetaByReferenciaCatastralAntigua,
+  getDashboardResumen,
 };

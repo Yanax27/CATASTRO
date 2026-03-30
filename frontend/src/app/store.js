@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import predioReducer from "../modules/predios/predioSlice";
+import prediosReducer from "../modules/predios/predioSlice";
+import authReducer from "../modules/auth/authSlice";
 
 const store = configureStore({
   reducer: {
-    predios: predioReducer,
+    predios: prediosReducer,
+    auth: authReducer,
   },
 });
 

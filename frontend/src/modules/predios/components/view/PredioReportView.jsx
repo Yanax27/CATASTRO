@@ -44,7 +44,7 @@ const PredioReportView = ({ predio }) => {
 
         <div className="lg:col-span-2 space-y-4">
           <PredioMapPanel predio={predio} />
-          <PredioPhotoPanel />
+          {/*<PredioPhotoPanel />*/}
         </div>
       </div>
     </div>
