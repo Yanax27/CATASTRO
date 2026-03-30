@@ -1,57 +1,42 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
+const cookieParser = require("cookie-parser");
 
 async function createApp() {
   const app = express();
 
-  // Middlewares base
   app.use(express.json());
+  app.use(cookieParser());
 
-  // Orígenes permitidos
   const allowedOrigins = [
-    "http://localhost:5173", // frontend local
-    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "http://172.16.160.180",
   ];
 
-  // CORS
   app.use(
     cors({
       origin: function (origin, callback) {
-        if (!origin) return callback(null, true); // Postman, Insomnia, etc.
+        if (!origin) return callback(null, true);
+
         if (allowedOrigins.includes(origin)) {
           return callback(null, true);
         }
+
         return callback(new Error("No permitido por CORS"));
       },
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     })
   );
 
-  // Headers extra
-  app.use((req, res, next) => {
-    const origin = req.headers.origin;
+  app.use(cookieParser());
 
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-    }
-
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET, POST, DELETE, PUT, PATCH"
-    );
-
-    next();
+  app.get("/", (_req, res) => {
+    res.status(200).send("<h1>Backend Catastral activo ✅</h1>");
   });
 
-  // Salud
   app.get("/health", (_req, res) => {
     res.json({
       ok: true,
@@ -59,10 +44,8 @@ async function createApp() {
     });
   });
 
-  // Rutas principales
   app.use("/api", routes);
 
-  // 404
   app.use((req, res) => {
     res.status(404).json({
       ok: false,
@@ -70,7 +53,6 @@ async function createApp() {
     });
   });
 
-  // Manejo de errores
   app.use((err, _req, res, _next) => {
     console.error("[ERR]", err);
 

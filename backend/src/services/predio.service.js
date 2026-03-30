@@ -16,7 +16,25 @@ const getPredioByReferenciaCatastralAntigua = async (referenciaCatastral) => {
   return mapPredioDomains(predio);
 };
 
+const updateUbicCarpetaByReferenciaCatastralAntigua = async (
+  referenciaCatastral,
+  ubicCarpeta
+) => {
+  const predio =
+    await predioDAO.updateUbicCarpetaByReferenciaCatastralAntigua(
+      referenciaCatastral,
+      ubicCarpeta
+    );
+
+  return predio;
+};
+const getDashboardResumen = async () => {
+  return await predioDAO.getDashboardResumen();
+};
+
 module.exports = {
   searchPredios,
   getPredioByReferenciaCatastralAntigua,
+  updateUbicCarpetaByReferenciaCatastralAntigua,
+  getDashboardResumen,
 };

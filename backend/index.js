@@ -11,20 +11,14 @@ async function start() {
 
     const app = await createApp();
 
-    // Ruta raíz simple
-    app.get("/", (_req, res) => {
-      res.status(200).send("<h1>Backend Catastral activo ✅</h1>");
-    });
-
     app.listen(PORT, () => {
-      console.log(`✅ Backend corriendo en http://127.0.0.1:${PORT}`);
+      console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
     });
   } catch (err) {
     console.error("❌ Error iniciando backend:", err);
   }
 }
 
-// Previene doble ejecución
 if (require.main === module) {
   start();
 }
