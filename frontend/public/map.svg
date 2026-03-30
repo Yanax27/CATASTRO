@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="512" height="512" id="map">
+  <linearGradient id="a" x1="2.988" x2="246.68" y1="412.571" y2="168.879" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FF7BAC"></stop>
+    <stop offset="1" stop-color="#0FF"></stop>
+  </linearGradient>
+  <path fill="url(#a)" d="M190.416 441.543 59.249 468.832V139.905l131.167-27.29z"></path>
+  <linearGradient id="b" x1="265.321" x2="509.014" y1="412.571" y2="168.879" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#FF7BAC"></stop>
+    <stop offset="1" stop-color="#0FF"></stop>
+  </linearGradient>
+  <path fill="url(#b)" d="m452.751 441.543-131.168 27.289V139.905l131.168-27.29z"></path>
+  <linearGradient id="c" x1="147.799" x2="364.201" y1="398.926" y2="182.524" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#0FF"></stop>
+    <stop offset="1" stop-color="#FF7BAC"></stop>
+  </linearGradient>
+  <path fill="url(#c)" d="m190.416 441.543 131.167 27.289V139.905l-131.167-27.29z"></path>
+  <path fill="#3F5EAB" d="M440.299 136.2c0 51.381-93.032 166.206-93.032 166.206S254.234 187.581 254.234 136.2c0-51.38 41.651-93.032 93.032-93.032 51.38 0 93.033 41.652 93.033 93.032z"></path>
+  <path fill="#FFF" d="M347.267 93.943c-23.338 0-42.257 18.919-42.257 42.257s18.919 42.257 42.257 42.257 42.257-18.919 42.257-42.257-18.92-42.257-42.257-42.257zm0 65.842c-13.025 0-23.585-10.56-23.585-23.585s10.56-23.585 23.585-23.585 23.585 10.56 23.585 23.585-10.56 23.585-23.585 23.585z"></path>
+</svg>
